@@ -35,6 +35,8 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
+  html { background: var(--sea); }
+  body { min-height: 100vh; }
   body {
     background: var(--sea);
     background-image: radial-gradient(circle at 85% -10%, #1d8ea8 0, transparent 55%);
@@ -200,6 +202,44 @@
   footer { color: #bfe0e8; font-size: 13px; text-align: center; }
 
   #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  /* Desktop: two columns. Countdown pad on the left, status and stats beside it;
+     milestones on the left below, out-of-office generator on the right. */
+  @media (min-width: 900px) {
+    body { padding: 48px 32px 72px; }
+    main {
+      max-width: 1080px;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 28px; row-gap: 24px;
+      grid-template-areas:
+        "memo   memo"
+        "pad    live"
+        "pad    stats"
+        "meter  meter"
+        "mtitle otitle"
+        "badges ooo"
+        "badges note"
+        "badges party"
+        "footer footer";
+    }
+    .memo { grid-area: memo; margin-bottom: 8px; }
+    .memo p { font-size: 19px; }
+    h1 { font-size: 60px; max-width: 16ch; }
+    .pad { grid-area: pad; display: flex; flex-direction: column; }
+    .pad-body { flex: 1; align-content: center; padding: 28px 24px 32px; }
+    .live { grid-area: live; }
+    .stats { grid-area: stats; }
+    .meter { grid-area: meter; }
+    main > h2:nth-of-type(1) { grid-area: mtitle; }
+    main > h2:nth-of-type(2) { grid-area: otitle; }
+    .section-title { margin-top: 16px; }
+    .badges { grid-area: badges; align-self: start; }
+    .ooo { grid-area: ooo; align-self: start; }
+    .note { grid-area: note; align-self: start; }
+    #party { grid-area: party; align-self: start; }
+    footer { grid-area: footer; margin-top: 12px; }
+    button:hover, .cal-links a:hover { filter: brightness(1.06); }
+  }
 
   @media (max-width: 400px) {
     .clock div { width: 68px; }
