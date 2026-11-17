@@ -103,6 +103,18 @@
   .fill { height: 100%; width: 0; background: repeating-linear-gradient(-45deg, var(--binder) 0 12px, #f0655c 12px 24px); border-radius: 99px; }
   .meter small { color: var(--muted); font-size: 13px; }
 
+  /* Current status checker */
+  .live { background: var(--paper); border-radius: 10px; padding: 16px 18px; display: grid; gap: 12px; }
+  .live-head { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .live-row { display: flex; align-items: center; gap: 12px; min-height: 2.6em; }
+  .dot { flex: none; width: 16px; height: 16px; border-radius: 50%; background: var(--binder); animation: pulse 1.4s ease-in-out infinite; }
+  .live.free .dot { background: #2e9e5b; animation: none; }
+  .live.checking .dot { background: var(--sun); }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(228,67,58,.5); } 50% { box-shadow: 0 0 0 9px rgba(228,67,58,0); } }
+  @media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+  #liveText { font-family: var(--display); font-size: clamp(20px, 6vw, 28px); line-height: 1.15; }
+  .live small { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+
   /* Gag stats */
   .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
   .stats li {
@@ -130,6 +142,7 @@
     border: 0; border-radius: 10px; padding: 16px 18px; cursor: pointer;
     box-shadow: 0 5px 0 #a82b24;
   }
+  button:disabled { opacity: .6; cursor: default; }
   button:active { transform: translateY(3px); box-shadow: 0 2px 0 #a82b24; }
   button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 
@@ -199,6 +212,13 @@
     <div class="meter-head"><span>Kathleen is mentally retired</span><span id="pct">0%</span></div>
     <div class="track"><div class="fill" id="fill"></div></div>
     <small>Measured from the day this countdown began, 17 November 2026. Actual figure may be higher.</small>
+  </section>
+
+  <section class="live" id="live">
+    <div class="live-head">Kathleen's current status</div>
+    <div class="live-row"><span class="dot" aria-hidden="true"></span><span id="liveText" aria-live="polite">Busy.</span></div>
+    <button type="button" id="liveBtn">Check again</button>
+    <small id="liveCount">Checked 1 time. Found free: 0 times.</small>
   </section>
 
   <ul class="stats">
@@ -525,6 +545,48 @@
 
   tick();
   setInterval(tick, 1000);
+
+  // Current status: always some flavour of busy, until she retires.
+  var BUSY_FIRST = ["Busy.", "Still busy.", "Busy again.", "Busier than last time."];
+  var BUSY = [
+    "Very busy.", "Somehow even busier.", "Busiest so far today.", "Busy, with a side of busy.",
+    "Busy, but thanks for checking.", "In a meeting.", "In another meeting.",
+    "In a meeting about the last meeting.", "Just left a meeting. For a meeting.",
+    "On a call.", "On two calls.", "On a call with a broker.", "Double-booked.", "Triple-booked.",
+    "Back-to-back until 2028.", "Busy. Try again in 2028.", "Replying to email 1 of 214.",
+    "Busy reviewing a contract.", "Busy with renewals.", "Was free for a second. You missed it.",
+    "Free in five minutes. Just kidding. Busy.", "Lunch? No. Busy.",
+    "Do not disturb. Disturbed anyway. Busy.", "Busier than the last time you checked.",
+    "Still busy. Impressively so.", "Busy. Have you tried the out-of-office generator?",
+    "Too busy to update this status.", "Busy in a new and different way.",
+    "Busy. The calendar confirms it.", "Yes, still busy."
+  ];
+  var checks = 1, lastBusy = "", liveTimer = null;
+  function showLive() {
+    var live = $("live"), t;
+    live.classList.remove("checking");
+    if (new Date() >= TARGET) {
+      live.classList.add("free");
+      t = "Free. Finally.";
+      $("liveCount").textContent = "Checked " + checks + " times. Found free: every time from now on.";
+    } else {
+      if (checks <= BUSY_FIRST.length) { t = BUSY_FIRST[checks - 1]; }
+      else { do { t = pick(BUSY); } while (t === lastBusy); }
+      $("liveCount").textContent = "Checked " + checks + (checks === 1 ? " time" : " times") + ". Found free: 0 times.";
+    }
+    lastBusy = t;
+    $("liveText").textContent = t;
+    $("liveBtn").disabled = false;
+  }
+  showLive();
+  $("liveBtn").addEventListener("click", function () {
+    checks++;
+    this.disabled = true;
+    $("live").classList.add("checking");
+    $("liveText").textContent = "Checking\u2026";
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(showLive, 600);
+  });
 
   newOoo();
   $("oooNew").addEventListener("click", newOoo);
