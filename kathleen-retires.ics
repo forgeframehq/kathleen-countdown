@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//kathleenisretiring.com//Retirement Countdown//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:kathleen-retires-20271231@kathleenisretiring.com
+DTSTAMP:20261117T160000Z
+DTSTART:20271231T170000
+DTEND:20271231T180000
+SUMMARY:Kathleen Faries retires
+DESCRIPTION:Wheels up. Kathleen's last day at work ends at 5 pm.\nLive countdown: https://kathleenisretiring.com/
+URL:https://kathleenisretiring.com/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Kathleen retires tomorrow
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

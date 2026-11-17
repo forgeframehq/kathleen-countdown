@@ -105,6 +105,15 @@
   .lastday { color: var(--muted); font-size: 15px; margin: 6px 0 0; }
   .lastday strong { color: var(--ink); }
 
+  .cal-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .cal-links a {
+    flex: 1 1 200px; max-width: 260px;
+    font-weight: 800; font-size: 15px; text-decoration: none;
+    color: var(--ink); background: var(--sun);
+    padding: 12px 14px; border-radius: 10px; box-shadow: 0 4px 0 #d9a51f;
+  }
+  .cal-links a:active { transform: translateY(2px); box-shadow: 0 2px 0 #d9a51f; }
+
   /* Mentally-retired meter */
   .meter {
     background: var(--paper); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px;
@@ -217,6 +226,10 @@
         <div><b id="s">00</b><span>seconds</span></div>
       </div>
       <p class="lastday">Last day: <strong>Friday 31 December 2027, 5:00 pm</strong>. A Friday, naturally.</p>
+      <div class="cal-links">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Kathleen%20Faries%20retires&amp;dates=20271231T170000/20271231T180000&amp;details=Wheels%20up.%20Kathleen%27s%20last%20day%20at%20work%20ends%20at%205%20pm.%20Live%20countdown%3A%20https%3A%2F%2Fkathleenisretiring.com%2F" target="_blank" rel="noopener">Add to Google Calendar</a>
+        <a href="https://kathleenisretiring.com/kathleen-retires.ics">Add to Apple or Outlook</a>
+      </div>
     </div>
   </section>
 
