@@ -547,21 +547,93 @@
   setInterval(tick, 1000);
 
   // Current status: always some flavour of busy, until she retires.
-  var BUSY_FIRST = ["Busy.", "Still busy.", "Busy again.", "Busier than last time."];
   var BUSY = [
-    "Very busy.", "Somehow even busier.", "Busiest so far today.", "Busy, with a side of busy.",
-    "Busy, but thanks for checking.", "In a meeting.", "In another meeting.",
-    "In a meeting about the last meeting.", "Just left a meeting. For a meeting.",
-    "On a call.", "On two calls.", "On a call with a broker.", "Double-booked.", "Triple-booked.",
-    "Back-to-back until 2028.", "Busy. Try again in 2028.", "Replying to email 1 of 214.",
-    "Busy reviewing a contract.", "Busy with renewals.", "Was free for a second. You missed it.",
-    "Free in five minutes. Just kidding. Busy.", "Lunch? No. Busy.",
-    "Do not disturb. Disturbed anyway. Busy.", "Busier than the last time you checked.",
-    "Still busy. Impressively so.", "Busy. Have you tried the out-of-office generator?",
-    "Too busy to update this status.", "Busy in a new and different way.",
-    "Busy. The calendar confirms it.", "Yes, still busy."
+    "Busy.",
+    "Still busy.",
+    "Busy again.",
+    "Busier than last time.",
+    "Very busy.",
+    "Somehow even busier.",
+    "Busiest so far today.",
+    "Busy, with a side of busy.",
+    "Busy, but thanks for checking.",
+    "In a meeting.",
+    "In another meeting.",
+    "In a meeting about the last meeting.",
+    "Just left a meeting. For a meeting.",
+    "On a call.",
+    "On two calls.",
+    "On a call with a broker.",
+    "Double-booked.",
+    "Triple-booked.",
+    "Back-to-back until 2028.",
+    "Busy. Try again in 2028.",
+    "Replying to email 1 of 214.",
+    "Busy reviewing a contract.",
+    "Busy with renewals.",
+    "Was free for a second. You missed it.",
+    "Free in five minutes. Just kidding. Busy.",
+    "Lunch? No. Busy.",
+    "Do not disturb. Disturbed anyway. Busy.",
+    "Busier than the last time you checked.",
+    "Still busy. Impressively so.",
+    "Busy. Have you tried the out-of-office generator?",
+    "Too busy to update this status.",
+    "Busy in a new and different way.",
+    "Busy. The calendar confirms it.",
+    "Yes, still busy.",
+    "Busy. Shockingly.",
+    "Busy. Again. Still.",
+    "Busier than yesterday.",
+    "Busier than five minutes ago.",
+    "Busy at a level previously thought theoretical.",
+    "Peak busy.",
+    "Busy, and the day has barely started.",
+    "Busy, with more busy forecast.",
+    "In a meeting that should end soon. It won't.",
+    "In a meeting. The next one has already started.",
+    "On mute, but busy.",
+    "On a call. Camera off. Busy.",
+    "Presenting.",
+    "Reading a 90-page contract.",
+    "On page 47 of the wording.",
+    "Reviewing a treaty.",
+    "Pricing something complicated.",
+    "Deep in renewals.",
+    "Talking to a cedant.",
+    "Watching a storm track. Also busy.",
+    "Answering the email you sent last week.",
+    "Answering emails almost as fast as they arrive.",
+    "Inbox: 214. Now 215.",
+    "Signing things.",
+    "Approving things.",
+    "Fixing something nobody else noticed.",
+    "Helping someone else. As usual.",
+    "Running between meetings.",
+    "Eating lunch at her desk. Busy.",
+    "Coffee in hand. Busy.",
+    "Out of office? No. Busy.",
+    "Available. Kidding. Busy.",
+    "Almost free. False alarm.",
+    "Free at 5 pm on 31 December 2027.",
+    "Next opening: January 2028.",
+    "Calendar full. Try the waiting list.",
+    "Fully booked through renewal season.",
+    "Busy enough for two people.",
+    "Doing three things at once. All of them well.",
+    "Busy. She says hello, though.",
+    "Busy, but smiling about the countdown.",
+    "Busy. The countdown is not.",
+    "On a quick call. Forty minutes so far.",
+    "In a \u201cfive-minute catch-up.\u201d Minute 35.",
+    "Scheduling the next meeting during this one.",
+    "Checked twice to be sure. Busy.",
+    "Our records show: busy.",
+    "Busy. Please hold.",
+    "You are number 37 in the queue.",
+    "Busy. You could have guessed."
   ];
-  var checks = 1, lastBusy = "", liveTimer = null;
+  var checks = 1, lastBusy = "", liveTimer = null, busyBag = [];
   function showLive() {
     var live = $("live"), t;
     live.classList.remove("checking");
@@ -570,8 +642,9 @@
       t = "Free. Finally.";
       $("liveCount").textContent = "Checked " + checks + " times. Found free: every time from now on.";
     } else {
-      if (checks <= BUSY_FIRST.length) { t = BUSY_FIRST[checks - 1]; }
-      else { do { t = pick(BUSY); } while (t === lastBusy); }
+      // Random every time, working through the whole list before any line repeats.
+      if (!busyBag.length) { busyBag = BUSY.slice(); }
+      do { t = busyBag.splice(Math.floor(Math.random() * busyBag.length), 1)[0]; } while (t === lastBusy && busyBag.length);
       $("liveCount").textContent = "Checked " + checks + (checks === 1 ? " time" : " times") + ". Found free: 0 times.";
     }
     lastBusy = t;
